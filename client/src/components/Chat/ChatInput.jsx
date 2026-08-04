@@ -1,21 +1,54 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import api from "@/services/api";
 
-function ChatInput({ messages, setMessages }) {
+function ChatInput({ setMessages }) {
   const [text, setText] = useState("");
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!text.trim()) return;
 
-    const newMessage = {
+    const userText = text;
+
+    // User Message
+    const userMessage = {
       id: Date.now(),
       role: "user",
-      text,
+      text: userText,
     };
 
-    setMessages([...messages, newMessage]);
+    setMessages((prev) => [...prev, userMessage]);
+
+    // Clear Input
     setText("");
+
+    try {
+      // Send request to backend
+      const response = await api.post("/api/chat", {
+        message: userText,
+      });
+
+      // AI Message
+      const aiMessage = {
+        id: Date.now() + 1,
+        role: "assistant",
+        text: response.data.reply,
+      };
+
+      setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      console.error(error);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          role: "assistant",
+          text: "❌ Server Error",
+        },
+      ]);
+    }
   };
 
   return (
