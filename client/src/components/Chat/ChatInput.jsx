@@ -25,7 +25,7 @@ function ChatInput({ setMessages }) {
 
     try {
       // Send request to backend
-      const response = await api.post("/api/chat", {
+      const response = await api.post("/", {
         message: userText,
       });
 
@@ -66,9 +66,7 @@ function ChatInput({ setMessages }) {
           className="h-12"
         />
 
-        <Button onClick={sendMessage}>
-          Send
-        </Button>
+        <Button onClick={sendMessage}>Send</Button>
       </div>
     </div>
   );
