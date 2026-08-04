@@ -6,7 +6,7 @@ const ai = new GoogleGenAI({
 
 async function generateReply(message) {
   const response = await ai.models.generateContent({
-    model: "gemini-flash-latest",
+    model: "gemini-3.5-flash-lite",
     contents: [
       {
         role: "user",
